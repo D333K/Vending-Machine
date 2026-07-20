@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vending Machine Simulation</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="product-container">
+                <h1>Vending Machine</h1>
+                <div class="info-buy-style">
+                    <input type="text" id="product-name" readonly value="Product: ">
+                    <input type="text" id="product-quantity" readonly value="Quantity: 0">
+                    <input type="text" id="product-price" readonly value="Price: $0">
+                    <input type="text" id="final-price" readonly value="Final Price: $0">
+                </div>
+                <button class="buy-btn-style" id="buy-btn">Buy</button>
+            </div>
+    
+            <div class="money-content-style">
+                <input type="text" id="money-disply" value="$" readonly>
+                <div>
+                    <button onclick="click_number('1')">1</button>
+                    <button onclick="click_number('2')">2</button>
+                    <button onclick="click_number('3')">3</button>
+                    <button onclick="click_number('4')">4</button>
+                    <button onclick="click_number('5')">5</button>
+                    <button onclick="click_number('6')">6</button>
+                    <button onclick="click_number('7')">7</button>
+                    <button onclick="click_number('8')">8</button>
+                    <button onclick="click_number('9')">9</button>
+                    <button onclick="click_number('0')">0</button>
+                    <button id="ok-btn">OK</button>
+                    <button id="backspace-btn"><img src="backspace.svg" alt="backspace svg"></button>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <!-- <p>جميع الحقوق محفوظة لمذاق الربيع &copy; 2025</p> -->
+             <p>&copy; 2026 DK. All Rights Reserved</p>
+            <p>Created By <a href="mailto:dside1272@gmail.com">Dark Knight</a> </p>
+        </footer>
+        <script src="main.js"></script>
+    </body>
+</html>
