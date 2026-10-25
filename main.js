@@ -71,8 +71,14 @@ let products = [
 ];
 
 // Normal Variables.
+let current_product = 0;
+
 let quantity_left = 0;
+
 let total_money = 0;
+
+let money_list = [];
+
 let arr_products_info = [
     {
     
@@ -82,7 +88,11 @@ let arr_products_info = [
         "state": true,
     
     },
-    {}
+    {        
+
+        "productID": 0,
+
+    },
 ];
 
 // Preparing The Products Part
@@ -101,16 +111,27 @@ products.forEach((pro, index) => {
 });
 
 // Click Money Number Event
-function click_number(number){
+const click_number = (number) => {
 
     money_display.value += number;
 
 }
 
+const message_note = (text) => {
+
+    footer_container.style.filter = "blur(5px)";
+    money_machine.style.filter = "blur(5px)";
+    product_container.style.filter = "blur(5px)";
+    
+    message_box.style.display = "flex";
+    message.innerText = text;
+
+};
+
 // OK Event
 ok_btn.addEventListener("click", () => {
 
-    total_money = Number(money_display.value.slice(1));
+    money_list.push(Number(money_display.value.slice(1)));
     money_display.value = '$';
 
 });
@@ -157,17 +178,19 @@ ok_message_btn.addEventListener("click", () => {
 
 // Products List Event
 // Working Abt That Tomorrow Inshallah You Will Find The Solution🤲.
-products.forEach((product) => {
+products.forEach((product, index) => {
 
     product.product_btn.addEventListener("click", () => {
 
         arr_products_info[1]["productID"] = product.id;
 
-        if(arr_products_info[0]["productID"] == product.id){
+        if(arr_products_info[0]["productID"] == arr_products_info[1]["productID"]){
+            
+            current_product = index;
 
             if(product.quantity > arr_products_info[0]["quantityToken"]){
 
-                arr_products_info[0]["quantityToken"]++;
+                arr_products_info[0]["quantityToken"] += 1;
                 arr_products_info[0]["finalPrice"] = arr_products_info[0]["quantityToken"] * product.price;
 
                 product_name.value = `Product: ${product.name}`;
@@ -176,22 +199,29 @@ products.forEach((product) => {
                 product_price.value = `Price: $${product.price}`;
                 final_price.value = `Final Peice: $${arr_products_info[0]["finalPrice"]}`;
 
+                quantity_left = product.quantity - arr_products_info[0]["quantityToken"];
+                product.product_btn.innerText = `${product.id}: ${product.name} ${quantity_left} $${product.price}`;
+
             }else{
 
-                message_box.style.display = "flex";
-                message.innerText = `The Quantity Of ${product.name} Is Zero:(\nCome Back Later:)`;
+                text = `The Quantity Of ${product.name} Is Zero:(\nCome Back Later:)`;
+                message_note(text);
 
             }
         
-        }else if(arr_products_info[0]["productID"] != product.id){
+        }else if(arr_products_info[0]["productID"] != arr_products_info[1]["productID"]){
 
+            products[current_product].product_btn.innerText = `${products[current_product].id}: ${products[current_product].name} ${products[current_product].quantity} $${products[current_product].price}`;
+            
             arr_products_info[0]["quantityToken"] = 0;
 
             arr_products_info[0]["productID"] = arr_products_info[1]["productID"];
+            
+            current_product = index;
 
             if(product.quantity >= arr_products_info[0]["quantityToken"]){
                 
-                arr_products_info[0]["quantityToken"]++;
+                arr_products_info[0]["quantityToken"] += 1;
                 arr_products_info[0]["finalPrice"] = arr_products_info[0]["quantityToken"] * product.price;
 
                 product_name.value = `Product: ${product.name}`;
@@ -200,10 +230,13 @@ products.forEach((product) => {
                 product_price.value = `Price: $${product.price}`;
                 final_price.value = `Final Peice: $${arr_products_info[0]["finalPrice"]}`;
 
+                quantity_left = product.quantity - arr_products_info[0]["quantityToken"];
+                product.product_btn.innerText = `${product.id}: ${product.name} ${quantity_left} $${product.price}`;
+
             }else{
 
-                message_box.style.display = "flex";
-                message.innerText = `The Quantity Of ${product.name} Is Zero:(\nCome Back Later:)`;
+                text = `The Quantity Of ${product.name} Is Zero:(\nCome Back Later:)`;
+                message_note(text);
 
             }
 
@@ -216,60 +249,66 @@ products.forEach((product) => {
 // Buy Event
 buy_btn.addEventListener("click", () => {
     
+    money_list.forEach((money) => {
+
+        total_money += money;
+    
+    });
+
     products.forEach((product, index) => {
 
-        if(product.id == arr_products_info[0]["productID"]){
+        if(arr_products_info[0]["productID"] == product.id){
 
-            if(total_money >= arr_products_info[0]["finalPrice"]){
+            if(product.quantity >= arr_products_info[0]["quantityToken"]){
 
-                product_name.value = `Product: `;
-                product_quantity.value = `Quantity: 0`;
-            
-                product_price.value = `Price: $0`;
-                final_price.value = `Final Peice: $0`;
+                if(total_money >= arr_products_info[0]["finalPrice"]){
+
+                    let text = '';
+
+                    product_name.value = `Product: `;
+                    product_quantity.value = `Quantity: 0`;
                 
-                quantity_left = product.quantity - arr_products_info[0]["quantityToken"];
-                product.product_btn.innerText = `${product.id}: ${product.name} ${quantity_left} $${product.price}`;
-                
-                if(total_money > arr_products_info[0]["finalPrice"]){
-            
-                    message_box.style.display = "flex";
-
-                    footer_container.style.filter = "blur(5px)";
-                    money_machine.style.filter = "blur(5px)";
-                    product_container.style.filter = "blur(5px)";
-
-                    message.innerText = `You Have $${total_money - arr_products_info[0]["finalPrice"]} Left \nThank You For Using Our Machine:)`;
-                
-                }else{
-                 
-                    message_box.style.display = "flex";
-
-                    footer_container.style.filter = "blur(5px)";
-                    money_machine.style.filter = "blur(5px)";
-                    product_container.style.filter = "blur(5px)";
-
-                    message.innerText = `Thank You For Using Our Machine:)`;
-                
-                }
+                    product_price.value = `Price: $0`;
+                    final_price.value = `Final Peice: $0`;
                     
-                total_money = 0;
+                    quantity_left = product.quantity - arr_products_info[0]["quantityToken"];
+                    product.product_btn.innerText = `${product.id}: ${product.name} ${quantity_left} $${product.price}`;
+    
+                    product.quantity = quantity_left;
+                    
+                    if(total_money > arr_products_info[0]["finalPrice"]){
                 
-            }else if(total_money < arr_products_info[0]["finalPrice"]){
+                        text = `You Have $${total_money - arr_products_info[0]["finalPrice"]} Left \nThank You For Using Our Machine:)`;
+                    
+                    }else{
+                        
+                        text = `Thank You For Using Our Machine:)`;
+                        
+                    }
+                    
+                    message_note(text);
+    
+                    total_money = 0;
 
-                footer_container.style.filter = "blur(5px)";
-                money_machine.style.filter = "blur(5px)";
-                product_container.style.filter = "blur(5px)";
-         
-                message_box.style.display = "flex";
-                message.innerText = `Your Money Is Not Enough To Buy This Product:( \nYou Just Have $${total_money}`;
+                }else if(total_money < arr_products_info[0]["finalPrice"]){
+
+                    text = `Your Money Is Not Enough To Buy This Product:( \nYou Only Have $${total_money}`;
+                    message_note(text);
+
+                    products[current_product].product_btn.innerText = `${products[current_product].id}: ${products[current_product].name} ${products[current_product].quantity} $${products[current_product].price}`;
+                
+                    product_name.value = `Product: `;
+                    product_quantity.value = `Quantity: 0`;
+                
+                    product_price.value = `Price: $0`;
+                    final_price.value = `Final Peice: $0`;
+                }
             
-                product_name.value = `Product: `;
-                product_quantity.value = `Quantity: 0`;
-            
-                product_price.value = `Price: $0`;
-                final_price.value = `Final Peice: $0`;
-            
+            }else{
+
+                text = `The Quantity Of ${product.name} Is Zero:(\nCome Back Later:)`;
+                message_note(text);
+
             }
 
         }
